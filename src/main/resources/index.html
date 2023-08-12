@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>首页</title>
+  <script src="https://unpkg.com/axios@1.4.0/dist/axios.min.js"></script>
 </head>
 <body>
-你好！
+<p>你好！</p>
+<div>
+  <label>
+    目标：
+    <input id="target"/>
+  </label>
+  <!-- 用 thymeleaf 获取 crsf token -->
+  <label>
+    <input th:id="_csrf" th:value="${_csrf.getToken()}" hidden>
+  </label>
+  <button onclick="pay()">支付</button>
+</div>
+<!--<div>-->
+<!--  <label>-->
+<!--    修改密码-->
+<!--    <input id="oldPassword" placeholder="旧密码">-->
+<!--    <input id="newPassword" placeholder="新密码">-->
+<!--  </label>-->
+<!--  <button onclick="changePassword()">修改</button>-->
+<!--</div>-->
 </body>
+<script>
+  function pay() {
+    const target = document.getElementById('target').value
+    const _csrf = document.getElementById('_csrf').value
+    // 实际上浏览器对跨站请求伪造有一定的防护措施，所以可以关闭 Spring Security 的 CSRF 防护
+    // Spring Security 默认开启了 CSRF 防护，所以需要在请求头中添加 CSRF Token
+    axios.post('/demo_ss2/pay', {target, _csrf}, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(({data}) => {
+      console.log(data)
+      if (data.code === 0) {
+        alert('支付成功！')
+      } else {
+        alert('支付失败！')
+      }
+    })
+  }
+
+  // function changePassword() {
+  //   const oldPassword = document.getElementById('oldPassword').value
+  //   const newPassword = document.getElementById('newPassword').value
+  //   const _csrf = document.getElementById('_csrf').value
+  //   axios.post('/demo_ss2/change-password', {oldPassword, newPassword, _csrf}, {
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded'
+  //     }
+  //   }).then(({data}) => {
+  //     console.log(data)
+  //     if (data.code === 0) {
+  //       alert('修改成功！')
+  //     } else {
+  //       alert('修改失败！')
+  //     }
+  //   })
+  // }
+</script>
 </html>

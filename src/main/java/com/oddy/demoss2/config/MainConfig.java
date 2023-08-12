@@ -1,10 +1,10 @@
 package com.oddy.demoss2.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.ISpringTemplateEngine;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
@@ -13,9 +13,11 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @Configuration
 @ComponentScan("com.oddy.demoss2.controller")
-// 开启 SpringMVC 支持
+@ComponentScan("com.oddy.demoss2.service")
+@MapperScan("com.oddy.demoss2.mapper")
+// 开启 SpringMVC 支持（实际上就是导入了一些 SpringMVC 的配置类）
 @EnableWebMvc
-public class MainConfig implements WebMvcConfigurer {
+public class MainConfig {
 
   // 配置模板解析器
   @Bean
