@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Select;
 // 1.2.3 自定义认证 映射类
 public interface AccountMapper {
 
-  @Select("select * from user where username = #{username}")
+  @Select("select * from users where username = #{username}")
   Account selectByUsername(String username);
 
 }

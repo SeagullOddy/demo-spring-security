@@ -4,7 +4,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.ISpringTemplateEngine;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
@@ -17,7 +20,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @MapperScan("com.oddy.demoss2.mapper")
 // 开启 SpringMVC 支持（实际上就是导入了一些 SpringMVC 的配置类）
 @EnableWebMvc
-public class MainConfig {
+public class MainConfig implements WebMvcConfigurer {
 
   // 配置模板解析器
   @Bean
@@ -46,6 +49,16 @@ public class MainConfig {
     resolver.setCharacterEncoding("UTF-8"); // 视图解析器使用的字符集，必须设置，否则中文乱码
     resolver.setTemplateEngine(templateEngine);
     return resolver;
+  }
+
+  @Override
+  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    configurer.enable();
+  }
+
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
   }
 
 }

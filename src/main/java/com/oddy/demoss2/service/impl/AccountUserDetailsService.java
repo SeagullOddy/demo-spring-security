@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-// 1.2.3 自定义认证
+// 1.2.3 自定义认证（基于数据库，也可以基于本地文件等，随心所欲）
 // 通过实现 UserDetailsService/UserDetailsManager 接口来实现自定义的用户认证
 @Service
 public class AccountUserDetailsService implements UserDetailsService {
