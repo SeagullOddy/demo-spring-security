@@ -115,14 +115,14 @@ public class SecurityConfig {
       PersistentTokenRepository tokenRepository) throws Exception {
     return httpSecurity
         // 2.1 配置页面拦截规则
+        // 此处的授权配置应是粗配置，更细粒度的配置应在 Controller 中使用 @PreAuthorize 注解实现
+        // 详见 MainController
         // Spring Security 6.1.2 版本会报此错误：
         // Servlet 3.0规范的第4.4节不允许从未在web.xml，web-fragment.xml文件中定义或未用@WebListener注释的ServletContextListener调用此方法。
         .authorizeHttpRequests(auth -> auth.requestMatchers("/static/**")
             .permitAll()
-            .requestMatchers("/")
-            .hasAnyRole("USER", "ADMIN")
             .anyRequest()
-            .hasRole("ADMIN"))
+            .authenticated())
         // 2.2 自定义表单登录
         .formLogin(login -> login.loginPage("/login")
             .loginProcessingUrl("/do-login")
