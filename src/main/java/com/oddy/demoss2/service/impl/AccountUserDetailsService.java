@@ -27,7 +27,7 @@ public class AccountUserDetailsService implements UserDetailsService {
     return User.withUsername(account.getUsername())
         // 使用数据库中加密了的密码，作认证对比用
         .password(account.getPassword())
-        .roles("USER")
+        .roles(account.getRole())
         .build();
   }
 

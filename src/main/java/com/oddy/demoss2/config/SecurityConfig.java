@@ -119,8 +119,10 @@ public class SecurityConfig {
         // Servlet 3.0规范的第4.4节不允许从未在web.xml，web-fragment.xml文件中定义或未用@WebListener注释的ServletContextListener调用此方法。
         .authorizeHttpRequests(auth -> auth.requestMatchers("/static/**")
             .permitAll()
+            .requestMatchers("/")
+            .hasAnyRole("USER", "ADMIN")
             .anyRequest()
-            .authenticated())
+            .hasRole("ADMIN"))
         // 2.2 自定义表单登录
         .formLogin(login -> login.loginPage("/login")
             .loginProcessingUrl("/do-login")
