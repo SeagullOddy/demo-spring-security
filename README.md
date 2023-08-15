@@ -1,4 +1,4 @@
-# demo-ss2
+# Spring & Spring MVC & Spring Security Demo
 
 Spring & Spring MVC & Spring Security 基础学习 demo。
 
