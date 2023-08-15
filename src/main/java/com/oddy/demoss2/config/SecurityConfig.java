@@ -7,9 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 // 开启 Web 安全支持
@@ -103,9 +106,19 @@ public class SecurityConfig {
 //    return manager;
 //  }
 
+  // 持久化 Token 存储
+  @Bean
+  public PersistentTokenRepository persistentTokenRepository(DataSource dataSource) {
+    JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+    tokenRepository.setDataSource(dataSource);
+    // 根据数据源自动创建存储表，第一次启动时需要，之后注释掉
+//    tokenRepository.setCreateTableOnStartup(true);
+    return tokenRepository;
+  }
+
   // 自定义过滤器链，和 5.0 版本不同
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, PersistentTokenRepository tokenRepository) throws Exception {
     return httpSecurity
         // 配置页面拦截规则
         // 6.1.2 版本会报此错误：Servlet 3.0规范的第4.4节不允许从未在web.xml，web-fragment.xml文件中定义或未用@WebListener注释的ServletContextListener调用此方法。
@@ -113,11 +126,22 @@ public class SecurityConfig {
             .permitAll()
             .anyRequest()
             .authenticated())
-        // 配置表单登录
-        .formLogin(form -> form.loginPage("/login")
+        // 自定义表单登录
+        .formLogin(login -> login.loginPage("/login")
             .loginProcessingUrl("/do-login")
             .defaultSuccessUrl("/")
             .permitAll())
+        // 自定义退出登录
+        .logout(logout -> logout.logoutUrl("/do-logout")
+            .logoutSuccessUrl("/login")
+            .permitAll())
+        // 关闭 csrf，浏览器有足够的防护措施，不需要 csrf
+        .csrf(AbstractHttpConfigurer::disable)
+        // 记住我
+        .rememberMe(remember -> {
+          remember.tokenRepository(tokenRepository);
+          remember.tokenValiditySeconds(7 * 24 * 3600);
+        })
         // 构建
         .build();
   }
