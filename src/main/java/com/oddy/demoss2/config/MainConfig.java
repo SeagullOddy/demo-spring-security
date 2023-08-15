@@ -51,11 +51,13 @@ public class MainConfig implements WebMvcConfigurer {
     return resolver;
   }
 
+  // 启用默认的 Servlet
   @Override
   public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
     configurer.enable();
   }
 
+  // 配置静态资源的处理
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");

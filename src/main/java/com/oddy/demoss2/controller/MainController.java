@@ -8,12 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-  // 1.2.2 基于数据库的认证
-//  @Resource
-//  private UserDetailsManager userDetailsManager;
-//  @Resource
-//  private PasswordEncoder passwordEncoder;
-
   @GetMapping("/")
   public String index() {
     return "index";
@@ -35,8 +29,14 @@ public class MainController {
 //    return json.toJSONString();
 //  }
 
-  // 1.2.2 基于数据库的认证
+//  @Resource
+//  private UserDetailsManager userDetailsManager;
+
+//  @Resource
+//  private PasswordEncoder passwordEncoder;
+
   // 使用 UserDetailsManager，可以快速执行用户相关的管理操作，如修改密码
+  // UserDetailsService 则只能获取用户信息
 //  @PostMapping("/change-password")
 //  @ResponseBody
 //  public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword) {
